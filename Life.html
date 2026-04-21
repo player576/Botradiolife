@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Aidanil Radio LIVE</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      background: #1c1c1c;
+      font-size: 24px;
+    }
+
+    .player {
+      margin-top: 50px;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      background: #ff3b3b;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .news {
+      margin-top: 40px;
+      padding: 20px;
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  📻 AIDANIL RADIO LIVE
+</header>
+
+<div class="player">
+  <h2>🎧 Прямой эфир</h2>
+  <button onclick="playRadio()">▶ PLAY</button>
+  <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+</div>
+
+<div class="news">
+  <h3>📰 Сейчас в эфире:</h3>
+  <p id="now">Музыка + Новости скоро</p>
+</div>
+
+<script>
+function playRadio() {
+  document.getElementById("audio").play();
+}
+</script>
+
+</body>
+</html>
