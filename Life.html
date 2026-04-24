@@ -7,27 +7,26 @@
 
 <body style="background:#111;color:white;font-family:Arial;text-align:center;">
 
-<h1>📻 AIDANIL RADIO LIVE
-</h1>
+<h1>📻 AIDANIL RADIO LIVE</h1>
 
-<h2>🎧 ЭФИР </h2>
+<button onclick="startRadio()" style="padding:10px 20px;margin:10px;">
+🎧 Включить радио
+</button>
 
+<h2>🎧 ЭФИР</h2>
 <p id="now">Загрузка...</p>
 
-<audio id="audio" autoplay></audio>
+<audio id="audio"></audio>
 
 <hr>
 
 <h2>📰 Новости</h2>
 <div id="newsBox">Загрузка новостей...</div>
-   <button onclick="startRadio()" style="padding:10px 20px;">
-🎧 Включить радио
-   </button>
 
 <script>
-/* =======================
-   🎵 РАДИО (СТАБИЛЬНОЕ)
-======================= */
+/* =====================
+   🎵 РАДИО
+===================== */
 
 let tracks = [
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
@@ -41,30 +40,28 @@ function getTrack() {
 }
 
 function updateRadio() {
-  try {
-    let audio = document.getElementById("audio");
-    let track = getTrack();
+  let audio = document.getElementById("audio");
+  let track = getTrack();
 
-    if (audio.src !== track) {
-      audio.src = track;
-      audio.play().catch(()=>{});
-    }
-
-    document.getElementById("now").innerText =
-      "🎧 Сейчас в эфире";
-
-  } catch (e) {
-    console.log("radio error", e);
+  if (audio.src !== track) {
+    audio.src = track;
   }
+
+  document.getElementById("now").innerText =
+    "🎧 Сейчас в эфире музыка";
+}
+
+function startRadio() {
+  let audio = document.getElementById("audio");
+  audio.play();
 }
 
 setInterval(updateRadio, 5000);
 updateRadio();
 
-
-/* =======================
-   📰 НОВОСТИ (ИСПРАВЛЕНО)
-======================= */
+/* =====================
+   📰 НОВОСТИ
+===================== */
 
 const NEWS_URL = "https://raw.githubusercontent.com/player576/Botradiolife/main/news.json";
 
@@ -83,14 +80,10 @@ async function loadNews() {
 
   } catch (e) {
     document.getElementById("newsBox").innerHTML =
-      "⚠️ Новости не загружены (проверь GitHub ссылку)";
-    console.log("NEWS ERROR:", e);
+      "⚠️ Новости не загружены";
   }
 }
-function startRadio() {
-  let audio = document.getElementById("audio");
-  audio.play();
-}
+
 setInterval(loadNews, 5000);
 loadNews();
 
