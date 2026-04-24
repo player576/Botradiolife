@@ -1,13 +1,79 @@
-<h2>🎧 ПРЯМОЙ ЭФИР</h2>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Aidanil Radio LIVE</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+    }
 
-<p id="now">Загрузка эфира...</p>
+    header {
+      background: #1c1c1c;
+      padding: 20px;
+      font-size: 24px;
+    }
 
-<button onclick="playRadio()">▶</button>
-<button onclick="pauseRadio()">⏸</button>
+    button {
+      padding: 12px 20px;
+      margin: 5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
-<audio id="audio"></audio>
+    .play { background: #00c853; color: white; }
+    .pause { background: #ff3b3b; color: white; }
+
+    .box {
+      margin-top: 30px;
+      padding: 20px;
+    }
+
+    #now {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
+    .news {
+      margin-top: 40px;
+      background: #222;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  📻 AIDANIL RADIO LIVE
+</header>
+
+<div class="box">
+
+  <h2>🎧 ЭФИР</h2>
+
+  <button class="play" onclick="playRadio()">▶ PLAY</button>
+  <button class="pause" onclick="pauseRadio()">⏸ PAUSE</button>
+
+  <p id="now">Загрузка эфира...</p>
+
+  <audio id="audio" controls></audio>
+
+</div>
+
+<div class="news">
+  <h3>📰 Новости в эфире</h3>
+  <div id="newsBox">Загрузка...</div>
+</div>
 
 <script>
+/* =====================
+   🎵 МУЗЫКА (псевдо-live)
+===================== */
 let tracks = [
   {
     url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
@@ -16,34 +82,28 @@ let tracks = [
   {
     url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
     title: "🎵 Трек 2"
-  },
-  {
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    title: "🎵 Трек 3"
   }
 ];
 
 let audio = document.getElementById("audio");
 
-function getCurrentTrack() {
-  // меняем трек каждые 2 минуты
+function getTrack() {
   let now = Math.floor(Date.now() / 120000);
   return tracks[now % tracks.length];
 }
 
 function updateRadio() {
-  let current = getCurrentTrack();
+  let t = getTrack();
 
-  if (audio.src !== current.url) {
-    audio.src = current.url;
+  if (audio.src !== t.url) {
+    audio.src = t.url;
     audio.play();
   }
 
   document.getElementById("now").innerText =
-    "🎧 Сейчас в эфире:\n" + current.title;
+    "🎧 Сейчас в эфире: " + t.title;
 }
 
-// кнопки
 function playRadio() {
   audio.play();
 }
@@ -52,7 +112,74 @@ function pauseRadio() {
   audio.pause();
 }
 
-// обновление каждые 3 секунды
 setInterval(updateRadio, 3000);
 updateRadio();
+
+/* =====================
+   📰 НОВОСТИ (GitHub JSON)
+===================== */
+
+// 🔥 ВСТАВЬ СЮДА ССЫЛКУ С GitHub
+const NEWS_URL = "https://github.com/player576/Botradiolife/blob/main/news.json";
+
+async function loadNews() {
+  try {
+    let res = await fetch(NEWS_URL);
+    let news = await res.json();
+
+    let out = "";
+    for (let n of news) {
+      out += `<p>📰 <b>${n.text}</b><br>⏰ ${n.date} ${n.time}</p><hr>`;
+    }
+
+    document.getElementById("newsBox").innerHTML = out;
+  } catch (e) {
+    document.getElementById("newsBox").innerHTML = "❌ Ошибка загрузки";
+  }
+}
+
+setInterval(loadNews, 5000);
+loadNews();
+
+/* =====================
+   🧠 ОЗВУЧКА НОВОСТЕЙ
+===================== */
+
+let speaking = false;
+
+async function checkNews() {
+  let res = await fetch(NEWS_URL);
+  let news = await res.json();
+
+  let now = new Date();
+  let time = now.toTimeString().slice(0,5);
+  let date = now.toLocaleDateString("ru-RU");
+
+  for (let n of news) {
+    if (n.time === time && n.date === date && !speaking) {
+      speak(n.text);
+    }
+  }
+}
+
+function speak(text) {
+  speaking = true;
+
+  audio.pause();
+
+  let msg = new SpeechSynthesisUtterance(text);
+  msg.lang = "ru-RU";
+
+  msg.onend = () => {
+    speaking = false;
+    audio.play();
+  };
+
+  speechSynthesis.speak(msg);
+}
+
+setInterval(checkNews, 1000);
 </script>
+
+</body>
+</html>
