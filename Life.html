@@ -1,22 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Aidanil Radio LIVE</title>
+</head>
+
+<body style="background:#111;color:white;font-family:Arial;text-align:center;">
+
 <h1>📻 AIDANIL RADIO LIVE</h1>
 
 <h2>🎧 ЭФИР</h2>
 
-<p id="now">Загрузка эфира...</p>
+<p id="now">Загрузка...</p>
+
+<audio id="audio" autoplay></audio>
 
 <hr>
 
-<h2>📰 Новости в эфире</h2>
-<div id="newsBox">Загрузка...</div>
-<audio id="audio" autoplay></audio>
+<h2>📰 Новости</h2>
+<div id="newsBox">Загрузка новостей...</div>
 
 <script>
+/* =======================
+   🎵 РАДИО (СТАБИЛЬНОЕ)
+======================= */
+
 let tracks = [
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
 ];
 
-// одинаковый эфир для всех
 function getTrack() {
   let now = new Date();
   let key = now.getHours() * 60 + now.getMinutes();
@@ -24,18 +37,55 @@ function getTrack() {
 }
 
 function updateRadio() {
-  let audio = document.getElementById("audio");
-  let track = getTrack();
+  try {
+    let audio = document.getElementById("audio");
+    let track = getTrack();
 
-  if (audio.src !== track) {
-    audio.src = track;
-    audio.play();
+    if (audio.src !== track) {
+      audio.src = track;
+      audio.play().catch(()=>{});
+    }
+
+    document.getElementById("now").innerText =
+      "🎧 Сейчас в эфире";
+
+  } catch (e) {
+    console.log("radio error", e);
   }
-
-  document.getElementById("now").innerText =
-    "🎧 Сейчас в эфире музыка";
 }
 
 setInterval(updateRadio, 5000);
 updateRadio();
+
+/* =======================
+   📰 НОВОСТИ (БЕЗ ПАДЕНИЙ)
+======================= */
+
+const NEWS_URL = "https://github.com/player576/Botradiolife/blob/main/news.json";
+
+async function loadNews() {
+  try {
+    let res = await fetch(https://github.com/player576/Botradiolife/blob/main/news.json);
+    let news = await res.json();
+
+    let out = "";
+
+    for (let n of news) {
+      out += "📰 " + n.text + "<br>⏰ " + n.date + " " + n.time + "<hr>";
+    }
+
+    document.getElementById("newsBox").innerHTML = out;
+
+  } catch (e) {
+    document.getElementById("newsBox").innerHTML =
+      "⚠️ Новости не загружены (проверь GitHub ссылку)";
+  }
+}
+
+setInterval(loadNews, 5000);
+loadNews();
+
 </script>
+
+</body>
+</html>
