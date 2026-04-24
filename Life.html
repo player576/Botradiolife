@@ -57,15 +57,16 @@ function updateRadio() {
 setInterval(updateRadio, 5000);
 updateRadio();
 
+
 /* =======================
-   📰 НОВОСТИ (БЕЗ ПАДЕНИЙ)
+   📰 НОВОСТИ (ИСПРАВЛЕНО)
 ======================= */
 
 const NEWS_URL = "https://raw.githubusercontent.com/player576/Botradiolife/main/news.json";
 
 async function loadNews() {
   try {
-    let res = await fetch("https://raw.githubusercontent.com/player576/Botradiolife/main/news.json");
+    let res = await fetch(NEWS_URL);
     let news = await res.json();
 
     let out = "";
@@ -79,6 +80,7 @@ async function loadNews() {
   } catch (e) {
     document.getElementById("newsBox").innerHTML =
       "⚠️ Новости не загружены (проверь GitHub ссылку)";
+    console.log("NEWS ERROR:", e);
   }
 }
 
