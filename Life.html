@@ -1,4 +1,14 @@
-<audio id="audio"></audio>
+<h1>📻 AIDANIL RADIO LIVE</h1>
+
+<h2>🎧 ЭФИР</h2>
+
+<p id="now">Загрузка эфира...</p>
+
+<hr>
+
+<h2>📰 Новости в эфире</h2>
+<div id="newsBox">Загрузка...</div>
+<audio id="audio" autoplay></audio>
 
 <script>
 let tracks = [
@@ -6,23 +16,26 @@ let tracks = [
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
 ];
 
-function getLiveTrack() {
-  // синхронизация по времени (у ВСЕХ одинаково)
+// одинаковый эфир для всех
+function getTrack() {
   let now = new Date();
-  let minutes = now.getHours() * 60 + now.getMinutes();
-  return tracks[minutes % tracks.length];
+  let key = now.getHours() * 60 + now.getMinutes();
+  return tracks[key % tracks.length];
 }
 
-function syncRadio() {
+function updateRadio() {
   let audio = document.getElementById("audio");
-  let track = getLiveTrack();
+  let track = getTrack();
 
   if (audio.src !== track) {
     audio.src = track;
     audio.play();
   }
+
+  document.getElementById("now").innerText =
+    "🎧 Сейчас в эфире музыка";
 }
 
-setInterval(syncRadio, 5000);
-syncRadio();
+setInterval(updateRadio, 5000);
+updateRadio();
 </script>
