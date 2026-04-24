@@ -10,7 +10,7 @@
 <h1>📻 AIDANIL RADIO LIVE
 </h1>
 
-<h2>🎧 ЭФИР ps. если не работает потыкай должно зароботать</h2>
+<h2>🎧 ЭФИР </h2>
 
 <p id="now">Загрузка...</p>
 
@@ -20,6 +20,9 @@
 
 <h2>📰 Новости</h2>
 <div id="newsBox">Загрузка новостей...</div>
+   <button onclick="startRadio()" style="padding:10px 20px;">
+🎧 Включить радио
+   </button>
 
 <script>
 /* =======================
@@ -84,7 +87,10 @@ async function loadNews() {
     console.log("NEWS ERROR:", e);
   }
 }
-
+function startRadio() {
+  let audio = document.getElementById("audio");
+  audio.play();
+}
 setInterval(loadNews, 5000);
 loadNews();
 
